@@ -1,8 +1,3 @@
-/*
-TODO: synchronous task - as a wrapper
-TODO: server example
-*/
-
 #include "lib/async-ops.h"
 #include "lib/coroutines.h"
 #include "lib/socket.h"
@@ -16,43 +11,32 @@ TODO: server example
 
 using namespace ces;
 
-synchronous_task http_client() {
-  Socket s = Socket::ClientSocket(SockAddr(IPv4{}, "1.1.1.1", 80));
+synchronous_task http_client(const char *ip, int port) {
+  Socket s = Socket::ClientSocket(SockAddr(IPv4{}, ip, port));
   if (auto status = co_await async_connect(s.without_timeout());
       status.err != 0) {
     throw std::system_error(status.err, std::system_category(), status.message);
   }
 
   std::string req =
-      "GET / HTTP/1.1\r\nHost: 1.1.1.1\r\nConnection: close\r\n\r\n";
+      "GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n";
   if (auto status = co_await async_write(s.without_timeout(), req);
       status.err != 0) {
     throw std::system_error(status.err, std::system_category(), status.message);
   }
 
+  std::vector<uint8_t> buff(512, 0);
+  if (auto status = co_await async_read(s.without_timeout(), buff);
+      status.err != 0) {
+    throw std::system_error(status.err, std::system_category(), status.message);
+  } else {
+    for (size_t i = 0; i < status.cnt_bytes; i++) {
+      std::cout << buff[i];
+    }
+    std::cout << "\n";
+  }
+
   co_return;
-
-  /*
-
-    std::cerr << "Wrote " << cnt << " bytes.\n";
-    std::cerr << "Done writing.\n";
-
-    char buff[512];
-    while ((cnt = read(s.socket_, buff, 512)) != 0) {
-      if (cnt == -1) {
-        if (errno == EAGAIN) {
-          std::cerr << "Waiting for read.\n";
-          co_await socket_ready(s.socket_);
-        } else {
-          throw std::system_error(errno, std::system_category(),
-                                  "Failed to read socket.");
-        }
-        continue;
-      }
-      for (ssize_t i = 0; i < cnt; i++) {
-        std::cout << buff[i];
-      }
-    }*/
 }
 
-int main() { http_client(); }
+int main() { http_client("127.0.0.1", 8000); }

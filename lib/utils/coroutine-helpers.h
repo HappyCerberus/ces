@@ -4,6 +4,7 @@
 #include "lib/epoll-fwd.h"
 #include <concepts>
 #include <coroutine>
+#include <functional>
 
 namespace ces::utils {
 

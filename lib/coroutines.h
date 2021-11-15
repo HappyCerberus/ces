@@ -70,6 +70,46 @@ struct synchronous_task {
   using promise_type = synchronous_promise_type;
 };
 
+struct scheduled_task {
+  struct scheduled_promise_type {
+    using handle_type = std::coroutine_handle<scheduled_promise_type>;
+    scheduled_task get_return_object() {
+      return scheduled_task{handle_type::from_promise(*this)};
+    }
+    std::suspend_always initial_suspend() noexcept {
+      // schedule this coroutine on global queue
+      return {};
+    }
+    std::suspend_never final_suspend() noexcept {
+      // TODO: resume the epoll loop
+      return {};
+    }
+    void unhandled_exception() { std::terminate(); }
+    void return_void() {}
+  };
+
+  using promise_type = scheduled_promise_type;
+  using handle_type = promise_type::handle_type;
+  explicit scheduled_task(handle_type coro) : coro_(coro) {}
+  scheduled_task(const scheduled_task &) = delete;
+  scheduled_task(scheduled_task &&task) : coro_(move(task.coro_)) {
+    task.coro_ = nullptr;
+  }
+  scheduled_task &operator=(const scheduled_task &) = delete;
+  scheduled_task &operator=(scheduled_task &&task) {
+    coro_ = task.coro_;
+    task.coro_ = nullptr;
+    return *this;
+  }
+  ~scheduled_task() {
+    if (coro_) {
+      coro_.destroy();
+    }
+  }
+
+  handle_type coro_;
+};
+
 } // namespace ces
 
 #endif
