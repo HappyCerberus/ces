@@ -1,7 +1,8 @@
 #ifndef SOCKET_H_
 #define SOCKET_H_
 
-#include "lib/utils/observer.h"
+#include "ces/utils/observer.h"
+
 #include <arpa/inet.h>
 #include <variant>
 
@@ -21,23 +22,22 @@ struct SockAddr {
 
 struct Socket;
 
-using SocketView = utils::Observer<Socket>;
+using SocketView = utils::ObserverWithDeadline<Socket>;
 
 struct Socket {
   static Socket ServerSocket(SockAddr addr);
   static Socket ClientSocket(SockAddr addr);
   SocketView without_timeout() { return SocketView(*this); }
+  SocketView with_timeout(duration timeout) {
+    return SocketView(*this, clock::now() + timeout);
+  }
 
   Socket(SockAddr addr);
   ~Socket();
 
   SockAddr addr_;
   int fd_;
-  int errno_;
-  bool operating_ = false;
 };
-
-int get_errno(int fd);
 
 } // namespace ces
 

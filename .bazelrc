@@ -1,0 +1,7 @@
+build --color=yes
+build --cxxopt=-std=c++20
+build --cxxopt=-fcoroutines
+build --cxxopt=-pedantic
+build --cxxopt=-Wall
+build --cxxopt=-Wextra
+build --cxxopt=-Werror

@@ -32,3 +32,6 @@
 *.app
 
 .vscode
+gcm.cache
+*.gcm
+bazel-*

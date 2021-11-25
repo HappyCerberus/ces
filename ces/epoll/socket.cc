@@ -1,5 +1,5 @@
-#include "lib/socket.h"
-#include "lib/epoll-fwd.h"
+#include "ces/epoll/socket.h"
+#include "ces/epoll/epoll-fwd.h"
 
 #include <cerrno>
 #include <sys/socket.h>
@@ -72,16 +72,6 @@ Socket::Socket(SockAddr addr) : addr_(addr) {
 Socket::~Socket() {
   epoll_deregister_socket(fd_);
   close(fd_);
-}
-
-int get_errno(int fd) {
-  int error = 0;
-  socklen_t errlen = sizeof(error);
-  if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&error, &errlen) == 0) {
-    return error;
-  } else {
-    return errno;
-  }
 }
 
 } // namespace ces
