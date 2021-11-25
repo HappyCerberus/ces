@@ -15,11 +15,13 @@ utils::AwaitableData *ConditionEmitter::emit() {
 }
 
 void ConditionEmitter::notify_arrival(utils::AwaitableData *data) {
-  awaiting_.insert(data);
+  if (data->condition)
+    awaiting_.insert(data);
 }
 
 void ConditionEmitter::notify_departure(utils::AwaitableData *data) {
-  awaiting_.erase(data);
+  if (data->condition)
+    awaiting_.erase(data);
 }
 
 bool ConditionEmitter::is_empty() { return awaiting_.empty(); }

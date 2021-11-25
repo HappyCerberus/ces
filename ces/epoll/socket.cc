@@ -48,10 +48,14 @@ Socket Socket::ServerSocket(SockAddr addr) {
   if (ret == -1)
     throw std::system_error(errno, std::system_category(),
                             "Failed to listen on socket.");
+  s.operational_ = true;
   return s;
 }
 
 Socket Socket::ClientSocket(SockAddr addr) { return Socket(addr); }
+Socket Socket::AcceptedSocket(int fd) { return Socket(fd); }
+
+Socket Socket::make_client() { return Socket(addr_); }
 
 Socket::Socket(SockAddr addr) : addr_(addr) {
   int family = 0;
@@ -69,9 +73,13 @@ Socket::Socket(SockAddr addr) : addr_(addr) {
   epoll_register_socket(fd_);
 }
 
+Socket::Socket(int fd) : fd_(fd) { epoll_register_socket(fd_); }
+
 Socket::~Socket() {
-  epoll_deregister_socket(fd_);
-  close(fd_);
+  if (fd_ != -1) {
+    epoll_deregister_socket(fd_);
+    close(fd_);
+  }
 }
 
 } // namespace ces

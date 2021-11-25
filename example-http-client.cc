@@ -24,8 +24,6 @@ ces::chainable_task http_client(const char *ip, int port) {
                             status.err_message);
   }
 
-  std::cerr << "Connected!\n";
-
   std::string req =
       "GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n";
   auto wdata = std::as_bytes(std::span(req));
@@ -36,8 +34,6 @@ ces::chainable_task http_client(const char *ip, int port) {
   }
   if (wdata.size() > 0)
     throw std::runtime_error("Failed to write entire request.");
-
-  std::cerr << "Wrote request!\n";
 
   std::vector<uint8_t> buff(4096, 0);
   auto rdata = std::as_writable_bytes(std::span(buff));

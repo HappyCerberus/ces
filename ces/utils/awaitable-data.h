@@ -25,8 +25,8 @@ struct AwaitableData {
         deadline(deadline), result{} {}
 
   AwaitableData(EventCategory cat, EventID id, time_point deadline)
-      : continuation{std::noop_coroutine()}, condition{}, event_category(cat),
-        event_id(id), deadline(deadline), result{} {}
+      : continuation{std::noop_coroutine()}, condition{nullptr},
+        event_category(cat), event_id(id), deadline(deadline), result{} {}
 
   std::coroutine_handle<> continuation;
   std::function<bool()> condition;

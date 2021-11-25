@@ -35,3 +35,29 @@ cc_library(
         "//ces/epoll:socket",
     ],
 )
+
+cc_library(
+    name = "async-accept",
+    srcs = ["async-accept.cc"],
+    hdrs = ["async-accept.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ces/coroutines:chainable",
+        "//ces/coroutines:scheduler",
+        "//ces/coroutines:terminating",
+        "//ces/epoll:socket",
+    ],
+)
+
+cc_library(
+    name = "async-server",
+    srcs = ["async-server.cc"],
+    hdrs = ["async-server.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ces/async:async-accept",
+        "//ces/coroutines:chainable",
+        "//ces/coroutines:terminating",
+        "//ces/epoll:socket",
+    ],
+)

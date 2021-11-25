@@ -11,18 +11,9 @@ cc_library(
     hdrs = ["chainable.h"],
     visibility = ["//visibility:public"],
     deps = [
+        "//ces/coroutines/awaitables:final-continuation",
         "//ces/utils:awaitable-data",
         "//ces/utils:concepts",
-    ],
-)
-
-cc_library(
-    name = "detached",
-    srcs = ["detached.cc"],
-    hdrs = ["detached.h"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//ces:event-emitter",
     ],
 )
 
@@ -36,5 +27,14 @@ cc_library(
         "//ces/coroutines/awaitables:handoff",
         "//ces/coroutines/awaitables:universal",
         "//ces/utils:concepts",
+    ],
+)
+
+cc_library(
+    name = "terminating",
+    hdrs = ["terminating.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ces/coroutines/awaitables:final-continuation",
     ],
 )

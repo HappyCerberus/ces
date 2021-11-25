@@ -2,11 +2,14 @@
 
 This is a demonstration project for a complex coroutine use case.
 
-Full documentation with explanation is available at https://simontoth.eu/ces.
-
 ## Technical notes
 
 This project uses the Bazel build system and was tested with trunk version of GCC 12.
+
+### TODO for version 1.0
+
+- Documentation explaining how everything fits together.
+- Tests
 
 ### Things that can be better / potential TODO
 

@@ -1,5 +1,6 @@
 #include "ces/epoll/epoll-emitter.h"
 
+#include <iostream>
 #include <stdexcept>
 #include <sys/epoll.h>
 #include <sys/socket.h>

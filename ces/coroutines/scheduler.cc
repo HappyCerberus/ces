@@ -12,13 +12,17 @@ scheduler_task main_scheduler_impl() {
   while (true) {
     while (promise.scheduled_.size() > 0) {
       co_await awaitable_handoff(promise.scheduled_.front());
+      if (promise.scheduled_.front().done()) {
+        promise.scheduled_.front().destroy();
+      }
       promise.scheduled_.pop_front();
     }
 
     bool all_done = true;
     for (auto &em : promise.emitters_) {
-      if (!em->is_empty())
+      if (!em->is_empty()) {
         all_done = false;
+      }
     }
     if (all_done) {
       co_yield nullptr;

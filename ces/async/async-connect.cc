@@ -9,7 +9,8 @@ chainable_task async_connect(SocketView s) {
                                  "Failed to connect to server."};
   if (ret == 0)
     co_return utils::AwaitResult{utils::EventType::WakeUp, 0, ""};
-  co_return co_await main_scheduler().event(utils::EventCategory::EPOLL, s->fd_,
-                                            s.deadline());
+  auto epoll = co_await main_scheduler().event(utils::EventCategory::EPOLL,
+                                               s->fd_, s.deadline());
+  co_return epoll;
 }
 } // namespace ces

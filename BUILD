@@ -29,3 +29,19 @@ cc_binary(
         "//ces/timeouts:timeout-emitter",
     ],
 )
+
+cc_binary(
+    name = "example-echo-server",
+    srcs = ["example-echo-server.cc"],
+    deps = [
+        "//ces/async:async-connect",
+        "//ces/async:async-read",
+        "//ces/async:async-server",
+        "//ces/async:async-write",
+        "//ces/conditions:condition-emitter",
+        "//ces/coroutines:scheduler",
+        "//ces/coroutines:terminating",
+        "//ces/epoll:epoll-emitter",
+        "//ces/timeouts:timeout-emitter",
+    ],
+)

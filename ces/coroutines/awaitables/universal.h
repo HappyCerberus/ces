@@ -15,7 +15,10 @@ struct universal_awaiter {
   bool await_ready() {
     if (!data_.condition)
       return false;
-    return data_.condition();
+    bool result = data_.condition();
+    if (result)
+      data_.result.result_type = utils::EventType::WakeUp;
+    return result;
   }
   std::coroutine_handle<> await_suspend(std::coroutine_handle<> caller) {
     data_.continuation = caller;

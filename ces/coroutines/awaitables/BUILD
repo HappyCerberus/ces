@@ -12,3 +12,12 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = ["//ces/utils:awaitable-data"],
 )
+
+cc_library(
+    name = "final-continuation",
+    hdrs = ["final-continuation.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ces/utils:concepts",
+    ],
+)
